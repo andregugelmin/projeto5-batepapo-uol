@@ -8,7 +8,7 @@ body{
 }
 
 header{
-    right: 0;
+    width: 100vw;
     left:0;
     top:0;
     height: 80px;
@@ -32,8 +32,8 @@ header ion-icon{
 }
 
 main{
-    margin-top: 100px;
-    margin-bottom: 100px;
+    padding-top: 100px;
+    padding-bottom: 90px;
     font-size: 14px;
     line-height: 20px;
 }
@@ -52,6 +52,7 @@ main strong{
     background: #FFFFFF;
     margin-bottom: 4px;
     padding: 12px 8px;
+    word-wrap: break-word;
 }
 
 .status{
@@ -64,10 +65,10 @@ main strong{
 
 footer{
     position: fixed;
-    right: 0;
+    width: 100vw;
+    height: 80px;
     bottom: 0;
     left: 0;
-    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;

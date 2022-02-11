@@ -1,6 +1,6 @@
 let mensagens =[];
-
 let usuario;
+let mensagemInput;
 
 getNomeUsuario();
 
@@ -45,7 +45,7 @@ function conexaoAtualizada(resposta){
     console.log(resposta.data);
 }
 function erroAtualizarConexao(erro){
-    alert("Falha em atualizar conexao\n" + erro.data);
+    console.log("Falha em atualizar conexao\n" + erro.data);
 }
 
 function getMensagensServidor(){    
@@ -66,7 +66,7 @@ function mostrarMensagensRecebidas(){
 
         if(mensagens[i].type === 'status'){
             mainHTML.innerHTML += `
-            <div class="mensagem ${mensagens[i].type}">
+            <div class="mensagem ${mensagens[i].type}" data-identifier="message">
                 <p> <time>(${mensagens[i].time})</time> <strong>${mensagens[i].from} </strong> ${mensagens[i].text}</p>
             </div>
             `;
@@ -74,7 +74,7 @@ function mostrarMensagensRecebidas(){
 
         else if(mensagens[i].type === 'message'){
             mainHTML.innerHTML += `
-            <div class="mensagem ${mensagens[i].type}">
+            <div class="mensagem ${mensagens[i].type}" data-identifier="message">
                 <p> <time>(${mensagens[i].time})</time> <strong>${mensagens[i].from}</strong>  para <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}</p>
             </div>
             `;
@@ -82,7 +82,7 @@ function mostrarMensagensRecebidas(){
 
         else if(mensagens[i].type === 'private_message'){
             mainHTML.innerHTML += `
-            <div class="mensagem ${mensagens[i].type}">
+            <div class="mensagem ${mensagens[i].type}" data-identifier="message">
                 <p> <time>(${mensagens[i].time})</time> <strong>${mensagens[i].from}</strong> reservadamente para <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}</p>
             </div>
             `;
@@ -91,4 +91,33 @@ function mostrarMensagensRecebidas(){
     
     let ultimaMensagem = mainHTML.lastElementChild;
     ultimaMensagem.scrollIntoView();
+}
+
+function enviarMensagem(){
+    let mensagem = document.querySelector("input").value;
+    console.log(mensagem);
+   
+    if(mensagem!==""){
+        enviarMensagemServidor(mensagem);
+    }    
+}
+
+function enviarMensagemServidor(mensagem){
+    mensagemInput = {
+        from: usuario.name,
+        to: "Todos",
+        text: mensagem,
+        type: "message"
+    }
+    const requisaoEnviarMensagem = axios.post('https://mock-api.driven.com.br/api/v4/uol/messages', mensagemInput);
+       
+    requisaoEnviarMensagem.catch(erroEnviarMensagem);
+    mensagemInput.mensagem = "";
+    document.querySelector("input").value = ""
+}
+
+
+function erroEnviarMensagem(erro){
+    console.log("Erro ao enviar mensagem " + erro);
+    window.location.reload();
 }

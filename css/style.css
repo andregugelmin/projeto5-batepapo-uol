@@ -33,6 +33,7 @@ header ion-icon{
 
 main{
     margin-top: 100px;
+    margin-bottom: 100px;
     font-size: 14px;
     line-height: 20px;
 }
@@ -53,11 +54,11 @@ main strong{
     padding: 12px 8px;
 }
 
-.aviso{
+.status{
     background: #DCDCDC;
 }
 
-.reservado{
+.private_message{
     background: #FFDEDE;
 }
 

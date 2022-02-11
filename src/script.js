@@ -1,9 +1,55 @@
 let mensagens =[];
 
-setInterval(getMensagensServidor, 3000);
+let usuario;
+
+getNomeUsuario();
+
+function getNomeUsuario(){
+    const nomeUsuario = prompt("Qual seu lindo nome?");
+    usuario = {
+        name: nomeUsuario
+    }
+    realizarLogin();
+}
+
+function realizarLogin(){
+    const requisaoLogin = axios.post('https://mock-api.driven.com.br/api/v4/uol/participants', usuario);
+
+    requisaoLogin.then(entrarNaSala);
+    requisaoLogin.catch(erroRealizarLogin);
+}
+
+function erroRealizarLogin(erro){
+    if(erro.response.status === 400){
+        const nomeUsuario = prompt("Nome ja em uso, escolha outro nome");
+        usuario = {
+            name: nomeUsuario
+        }
+        realizarLogin();
+    }    
+}
+
+function entrarNaSala(){
+    setInterval(atualizarStatusUsuarioOnline, 5000);
+    setInterval(getMensagensServidor, 3000);
+
+}
+
+function atualizarStatusUsuarioOnline(){
+    const requisaoConexao = axios.post('https://mock-api.driven.com.br/api/v4/uol/status', usuario);
+    requisaoConexao.then(conexaoAtualizada);
+    requisaoConexao.catch(erroAtualizarConexao);
+}
+
+function conexaoAtualizada(resposta){
+    console.log(resposta.data);
+}
+function erroAtualizarConexao(erro){
+    alert("Falha em atualizar conexao\n" + erro.data);
+}
 
 function getMensagensServidor(){    
-    let promisseMensagensServidor = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
+    const promisseMensagensServidor = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
     promisseMensagensServidor.then(armazenarMensagens);
 
 }

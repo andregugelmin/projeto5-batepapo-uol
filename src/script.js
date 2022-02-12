@@ -208,7 +208,7 @@ function mostrarUsuariosOnline(){
         if(usuariosOnline[i].name !== usuario.name){
             if(usuariosOnline[i].name === usuarioSelecionado){
                 listaUsuarios.innerHTML += `
-                <div class="opcao" onclick="selecionarOpcaoPessoa(this)">
+                <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
                     <ion-icon name="person-circle"></ion-icon>
                     <p>${usuariosOnline[i].name}</p>
                     <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
@@ -217,7 +217,7 @@ function mostrarUsuariosOnline(){
             }
             else{
                 listaUsuarios.innerHTML += `
-                <div class="opcao" onclick="selecionarOpcaoPessoa(this)">
+                <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
                     <ion-icon name="person-circle"></ion-icon>
                     <p>${usuariosOnline[i].name}</p>
                     <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
@@ -250,9 +250,7 @@ function mudarHTMLVisibilidade(opcaoSelecionada, opcaoSelecionadaHTML){
         visibilidadeSelecionada.querySelector(".icone-selecionado").classList.add("escondido");
         opcaoSelecionadaHTML.classList.add("selecionado");
         opcaoSelecionadaHTML.querySelector(".icone-selecionado").classList.remove("escondido");
-    }
-
-    
+    }    
 }
 
 function mudarHTMLCaixaInput(){    
@@ -260,13 +258,22 @@ function mudarHTMLCaixaInput(){
 
     if(usuarioSelecionado === "Todos"){
         caixaInput.innerHTML = `
-            <input type="text" placeholder="Escreva aqui...">
+            <input type="text" placeholder="Escreva aqui..." onkeydown="checarTecla()">
         ` 
     }
     else{
         caixaInput.innerHTML = `
-            <input type="text" placeholder="Escreva aqui...">
+            <input type="text" placeholder="Escreva aqui..." onkeydown="checarTecla()">
             <p>Enviando para ${usuarioSelecionado} (${visibilidade.toLowerCase()})</p>
         `
     }
+}
+
+function checarTecla(input){
+    input.addEventListener('keyup', function(e){
+        var key = e.keyCode;
+        if (key == 13) { 
+            enviarMensagem();
+        }
+      });   
 }

@@ -1,8 +1,14 @@
 let mensagens =[];
 let usuario;
 let mensagemInput;
+let usuariosOnline = [];
+let usuarioSelecionado = "Todos";
 
 getNomeUsuario();
+atualizarStatusUsuarioOnline();
+getMensagensServidor();
+getUsuariosOnlineServidor();
+
 
 function getNomeUsuario(){
     const nomeUsuario = prompt("Qual seu lindo nome?");
@@ -27,12 +33,15 @@ function erroRealizarLogin(erro){
         }
         realizarLogin();
     }    
+    else{
+        window.location.reload();
+    }
 }
 
 function entrarNaSala(){
     setInterval(atualizarStatusUsuarioOnline, 5000);
     setInterval(getMensagensServidor, 3000);
-
+    setInterval(getUsuariosOnlineServidor, 10000);
 }
 
 function atualizarStatusUsuarioOnline(){
@@ -52,6 +61,14 @@ function getMensagensServidor(){
     const promisseMensagensServidor = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
     promisseMensagensServidor.then(armazenarMensagens);
 
+}
+
+function checarMensagensNovas(resposta){
+    let diferente = 0;
+    
+    if(mensagens[mensagens.length - 1].time !== resposta.data[resposta.data.length - 1].time){
+        armazenarMensagens(resposta);
+    }    
 }
 
 function armazenarMensagens(resposta){
@@ -121,3 +138,75 @@ function erroEnviarMensagem(erro){
     console.log("Erro ao enviar mensagem " + erro);
     window.location.reload();
 }
+
+function toggleMenu(){
+    document.querySelector(".menu-lateral").classList.toggle("escondido");
+}
+
+
+
+function getUsuariosOnlineServidor(){
+    const requisiçãoUsuariosOnline = axios.get('https://mock-api.driven.com.br/api/v4/uol/participants');
+    requisiçãoUsuariosOnline.then(armazenarUsuariosOnline);
+    
+}
+
+function armazenarUsuariosOnline(resposta){
+    
+    usuariosOnline = resposta.data;
+    mostrarUsuariosOnline(usuariosOnline);
+}
+
+function mostrarUsuariosOnline(usuarios){
+    const listaUsuarios = document.querySelector(".lista-usuarios");
+    if(usuarioSelecionado === "Todos"){
+        listaUsuarios.innerHTML = `
+        <div class="lista-usuarios">
+            <div class="opcao Todos selecionado" onclick="selecionarOpcaoPessoa(this)">
+                <ion-icon name="people"></ion-icon>
+                <p>Todos</p>
+                <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>                              
+        </div>
+        `
+    }
+    else{
+        listaUsuarios.innerHTML = `
+        <div class="lista-usuarios">
+            <div class="opcao Todos" onclick="selecionarOpcaoPessoa(this)">
+                <ion-icon name="people"></ion-icon>
+                <p>Todos</p>
+                <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>                              
+        </div>
+        `
+    }
+    
+    for(let i = 0; i < usuarios.length; i++){
+        if(usuarios[i].name === usuarioSelecionado){
+            listaUsuarios.innerHTML += `
+            <div class="opcao ${usuarios[i].name}" onclick="selecionarOpcaoPessoa(this)">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>${usuarios[i].name}</p>
+                <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>
+            `
+        }
+        else{
+            listaUsuarios.innerHTML += `
+            <div class="opcao ${usuarios[i].name}" onclick="selecionarOpcaoPessoa(this)">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>${usuarios[i].name}</p>
+                <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>
+            `
+        }           
+    }    
+}
+
+function selecionarOpcaoPessoa(novaOpcaoSelecionada){
+    opcaoSelecionada = novaOpcaoSelecionada.querySelector('p');
+    usuarioSelecionado = opcaoSelecionada.innerText;  
+    mostrarUsuariosOnline(usuariosOnline);
+}
+

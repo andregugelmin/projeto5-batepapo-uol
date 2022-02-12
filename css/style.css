@@ -96,3 +96,70 @@ footer ion-icon{
     font-size: 18px;
     line-height: 21px;
 }
+
+.menu-lateral{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.fundo{
+    background: rgba(0, 0, 0, 0.6);
+    width: calc(100vw - 260px);
+    height: 100%;
+}
+
+
+nav{
+    background: #FFFFFF;
+    width: 260px;
+    height: 100%;
+    padding-left: 18px;    
+    padding-right: 18px;    
+    font-size: 16px;
+    line-height: 19px;
+    overflow: auto;
+}
+
+h6{
+    font-weight: bold;
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-left: 7px;    
+    padding-right: 7px;
+}
+
+.opcao{
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    position: relative;    
+    overflow: hidden;
+}
+
+.opcao ion-icon{
+    font-size: 26px;
+    margin-right: 8px;
+}
+
+.icone-selecionado{
+    position: absolute;
+    right: 0;    
+    bottom: 0;
+}
+
+.icone-selecionado ion-icon{    
+    color: #28BB25;
+    font-size: 16px;
+    --ionicon-stroke-width: 86px;
+}
+
+.escondido{
+    display: none;
+}

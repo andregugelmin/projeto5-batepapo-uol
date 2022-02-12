@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-bt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,10 +19,33 @@
 
     <header>
         <img src="imgs/logo 1.png"/>
-        <ion-icon name="people"></ion-icon>
+        <ion-icon name="people" onclick="toggleMenu()"></ion-icon>
     </header>
 
     <main></main>
+
+    <div class="menu-lateral escondido">
+        <div class="fundo" onclick="toggleMenu()"></div>
+        <nav>
+            <h6>Escolha um contato para enviar mensagem:</h6>
+            <div class="lista-usuarios">                                            
+            </div>
+            <h6>Escolha a visibilidade:</h6>
+            <div class="visibilidade">
+                <div class="opcao selecionado">
+                    <ion-icon name="lock-open"></ion-icon>
+                    <p>Público</p>
+                    <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+                </div>
+                <div class="opcao">
+                    <ion-icon name="lock-closed"></ion-icon>
+                    <p>Reservadamente</p>
+                    <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+                </div>
+            </div>            
+
+        </nav>
+    </div>
 
     <footer>
         <input type="text" placeholder="Escreva aqui...">

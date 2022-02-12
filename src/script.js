@@ -3,6 +3,7 @@ let usuario;
 let mensagemInput;
 let usuariosOnline = [];
 let usuarioSelecionado = "Todos";
+let visibilidade = "Público"
 
 getNomeUsuario();
 atualizarStatusUsuarioOnline();
@@ -120,11 +121,19 @@ function enviarMensagem(){
 }
 
 function enviarMensagemServidor(mensagem){
+    let tipo = "";
+    if(visibilidade === "Público"){
+        tipo = "message";
+    }
+    else{
+        tipo = "private_message";
+    }
+
     mensagemInput = {
         from: usuario.name,
-        to: "Todos",
+        to: usuarioSelecionado,
         text: mensagem,
-        type: "message"
+        type: tipo
     }
     const requisaoEnviarMensagem = axios.post('https://mock-api.driven.com.br/api/v4/uol/messages', mensagemInput);
        
@@ -151,18 +160,31 @@ function getUsuariosOnlineServidor(){
     
 }
 
-function armazenarUsuariosOnline(resposta){
-    
-    usuariosOnline = resposta.data;
-    mostrarUsuariosOnline(usuariosOnline);
+function armazenarUsuariosOnline(resposta){    
+    const novaListaUsuariosOnline = resposta.data;
+    checarNovosUsuariosOnline(novaListaUsuariosOnline);
 }
 
-function mostrarUsuariosOnline(usuarios){
+function checarNovosUsuariosOnline(listaUsuariosOnline){
+    let diferente = 0;
+    for(let i = 0; i < listaUsuariosOnline.length; i++){
+        if(usuariosOnline[i] != listaUsuariosOnline[i]){
+            diferente = 1;
+        }
+    }
+
+    if (diferente == 1){
+        usuariosOnline = listaUsuariosOnline;
+        mostrarUsuariosOnline();
+    }
+}
+
+function mostrarUsuariosOnline(){
     const listaUsuarios = document.querySelector(".lista-usuarios");
     if(usuarioSelecionado === "Todos"){
         listaUsuarios.innerHTML = `
         <div class="lista-usuarios">
-            <div class="opcao Todos selecionado" onclick="selecionarOpcaoPessoa(this)">
+            <div class="opcao selecionado" onclick="selecionarOpcaoPessoa(this)">
                 <ion-icon name="people"></ion-icon>
                 <p>Todos</p>
                 <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
@@ -173,7 +195,7 @@ function mostrarUsuariosOnline(usuarios){
     else{
         listaUsuarios.innerHTML = `
         <div class="lista-usuarios">
-            <div class="opcao Todos" onclick="selecionarOpcaoPessoa(this)">
+            <div class="opcao" onclick="selecionarOpcaoPessoa(this)">
                 <ion-icon name="people"></ion-icon>
                 <p>Todos</p>
                 <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
@@ -182,31 +204,69 @@ function mostrarUsuariosOnline(usuarios){
         `
     }
     
-    for(let i = 0; i < usuarios.length; i++){
-        if(usuarios[i].name === usuarioSelecionado){
-            listaUsuarios.innerHTML += `
-            <div class="opcao ${usuarios[i].name}" onclick="selecionarOpcaoPessoa(this)">
-                <ion-icon name="person-circle"></ion-icon>
-                <p>${usuarios[i].name}</p>
-                <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
-            </div>
-            `
-        }
-        else{
-            listaUsuarios.innerHTML += `
-            <div class="opcao ${usuarios[i].name}" onclick="selecionarOpcaoPessoa(this)">
-                <ion-icon name="person-circle"></ion-icon>
-                <p>${usuarios[i].name}</p>
-                <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
-            </div>
-            `
-        }           
+    for(let i = 0; i < usuariosOnline.length; i++){
+        if(usuariosOnline[i].name !== usuario.name){
+            if(usuariosOnline[i].name === usuarioSelecionado){
+                listaUsuarios.innerHTML += `
+                <div class="opcao" onclick="selecionarOpcaoPessoa(this)">
+                    <ion-icon name="person-circle"></ion-icon>
+                    <p>${usuariosOnline[i].name}</p>
+                    <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+                </div>
+                `
+            }
+            else{
+                listaUsuarios.innerHTML += `
+                <div class="opcao" onclick="selecionarOpcaoPessoa(this)">
+                    <ion-icon name="person-circle"></ion-icon>
+                    <p>${usuariosOnline[i].name}</p>
+                    <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+                </div>
+                `
+            } 
+        }                  
     }    
 }
 
 function selecionarOpcaoPessoa(novaOpcaoSelecionada){
-    opcaoSelecionada = novaOpcaoSelecionada.querySelector('p');
+    const opcaoSelecionada = novaOpcaoSelecionada.querySelector('p');
     usuarioSelecionado = opcaoSelecionada.innerText;  
     mostrarUsuariosOnline(usuariosOnline);
+    mudarHTMLCaixaInput();
 }
 
+function selecionarOpcaoVisibilidade(novaOpcaoSelecionada){
+    const opcaoSelecionada = novaOpcaoSelecionada.querySelector('p');
+    visibilidade = opcaoSelecionada.innerText;  
+    mudarHTMLVisibilidade(visibilidade, novaOpcaoSelecionada);
+    mudarHTMLCaixaInput();
+}
+
+function mudarHTMLVisibilidade(opcaoSelecionada, opcaoSelecionadaHTML){
+    const visibilidadeSelecionada = document.querySelector(".visibilidade .selecionado");
+
+    if(visibilidadeSelecionada !== opcaoSelecionadaHTML){
+        visibilidadeSelecionada.classList.remove("selecionado");
+        visibilidadeSelecionada.querySelector(".icone-selecionado").classList.add("escondido");
+        opcaoSelecionadaHTML.classList.add("selecionado");
+        opcaoSelecionadaHTML.querySelector(".icone-selecionado").classList.remove("escondido");
+    }
+
+    
+}
+
+function mudarHTMLCaixaInput(){    
+    const caixaInput = document.querySelector(".caixa-input");
+
+    if(usuarioSelecionado === "Todos"){
+        caixaInput.innerHTML = `
+            <input type="text" placeholder="Escreva aqui...">
+        ` 
+    }
+    else{
+        caixaInput.innerHTML = `
+            <input type="text" placeholder="Escreva aqui...">
+            <p>Enviando para ${usuarioSelecionado} (${visibilidade.toLowerCase()})</p>
+        `
+    }
+}

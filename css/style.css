@@ -74,15 +74,7 @@ footer{
     justify-content: space-between;
     background: #FFFFFF;
     box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
-}
-
-footer input{
-    height: 100%;
-    width: 100%;
     padding-left: 18px;
-    border: none;
-    font-size: 18px;
-    line-height: 21px;
 }
 
 footer ion-icon{
@@ -90,11 +82,39 @@ footer ion-icon{
     margin-right: 18px;
 }
 
-::placeholder{
+.caixa-input{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+input{
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    line-height: 21px;
+    font-weight: 400;
+}
+
+input::placeholder{
     font-style: italic;
     font-weight: normal;
     font-size: 18px;
     line-height: 21px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.caixa-input p{
+    position: absolute;
+    bottom: 3px;
+    left: 1px;
+    font-size: 14px;
+    line-height: 25px;
+    font-weight: 300;
+    color: #7C7C7C;
+    
 }
 
 .menu-lateral{
@@ -163,3 +183,4 @@ h6{
 .escondido{
     display: none;
 }
+

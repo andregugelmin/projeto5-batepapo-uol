@@ -32,12 +32,12 @@
             </div>
             <h6>Escolha a visibilidade:</h6>
             <div class="visibilidade">
-                <div class="opcao selecionado">
+                <div class="opcao selecionado" onclick="selecionarOpcaoVisibilidade(this)">
                     <ion-icon name="lock-open"></ion-icon>
                     <p>Público</p>
                     <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
                 </div>
-                <div class="opcao">
+                <div class="opcao" onclick="selecionarOpcaoVisibilidade(this)">
                     <ion-icon name="lock-closed"></ion-icon>
                     <p>Reservadamente</p>
                     <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
@@ -48,7 +48,9 @@
     </div>
 
     <footer>
-        <input type="text" placeholder="Escreva aqui...">
+        <div class="caixa-input">
+            <input type="text" placeholder="Escreva aqui...">
+        </div>        
         <ion-icon name="paper-plane-outline" onclick="enviarMensagem()" data-identifier="send-message"></ion-icon>
     </footer>
 

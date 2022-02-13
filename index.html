@@ -22,6 +22,12 @@
         <ion-icon name="people" onclick="toggleMenu()"></ion-icon>
     </header>
 
+    <div class="tela-login">
+        <img src="imgs/logo 2.png">
+        <input type="text" placeholder="Digite seu nome" onkeydown="checarTecla(this)" data-identifier="enter-name">
+        <button type="button" onclick="getNomeUsuario()" data-identifier="start">Entrar</button>
+    </div>
+
     <main></main>
 
     <div class="menu-lateral escondido">
@@ -46,6 +52,7 @@
 
         </nav>
     </div>
+
 
     <footer>
         <div class="caixa-input">

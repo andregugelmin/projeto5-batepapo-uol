@@ -5,18 +5,17 @@ let usuariosOnline = [];
 let usuarioSelecionado = "Todos";
 let visibilidade = "Público"
 
-getNomeUsuario();
-atualizarStatusUsuarioOnline();
-getMensagensServidor();
-getUsuariosOnlineServidor();
-
+//  -----------------------------Entrar na sala-----------------------------  //
 
 function getNomeUsuario(){
-    const nomeUsuario = prompt("Qual seu lindo nome?");
-    usuario = {
-        name: nomeUsuario
+    let nomeUsuario = document.querySelector(".tela-login input").value;
+    console.log(nomeUsuario);
+    if(nomeUsuario!==""){
+        usuario = {
+            name: nomeUsuario
+        }
+        realizarLogin();
     }
-    realizarLogin();
 }
 
 function realizarLogin(){
@@ -28,18 +27,18 @@ function realizarLogin(){
 
 function erroRealizarLogin(erro){
     if(erro.response.status === 400){
-        const nomeUsuario = prompt("Nome ja em uso, escolha outro nome");
-        usuario = {
-            name: nomeUsuario
-        }
-        realizarLogin();
-    }    
-    else{
+        alert("Nome ja em uso, escolha outro nome"); 
         window.location.reload();
     }
 }
 
 function entrarNaSala(){
+    const telaLogin = document.querySelector(".tela-login");
+    telaLogin.classList.add("escondido");
+
+    atualizarStatusUsuarioOnline();
+    getMensagensServidor();
+    getUsuariosOnlineServidor();
     setInterval(atualizarStatusUsuarioOnline, 5000);
     setInterval(getMensagensServidor, 3000);
     setInterval(getUsuariosOnlineServidor, 10000);
@@ -57,6 +56,9 @@ function conexaoAtualizada(resposta){
 function erroAtualizarConexao(erro){
     console.log("Falha em atualizar conexao\n" + erro.data);
 }
+
+
+//  -----------------------------Receber mensagens-----------------------------  //
 
 function getMensagensServidor(){    
     const promisseMensagensServidor = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
@@ -98,7 +100,7 @@ function mostrarMensagensRecebidas(){
             `;
         }
 
-        else if(mensagens[i].type === 'private_message'){
+        else if(mensagens[i].type === 'private_message' && (mensagens[i].from === usuario.name || mensagens[i].to === usuario.name)){
             mainHTML.innerHTML += `
             <div class="mensagem ${mensagens[i].type}" data-identifier="message">
                 <p> <time>(${mensagens[i].time})</time> <strong>${mensagens[i].from}</strong> reservadamente para <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}</p>
@@ -111,8 +113,10 @@ function mostrarMensagensRecebidas(){
     ultimaMensagem.scrollIntoView();
 }
 
+//  -----------------------------Enviar mensagens-----------------------------  //
+
 function enviarMensagem(){
-    let mensagem = document.querySelector("input").value;
+    let mensagem = document.querySelector(".caixa-input input").value;
     console.log(mensagem);
    
     if(mensagem!==""){
@@ -139,7 +143,7 @@ function enviarMensagemServidor(mensagem){
        
     requisaoEnviarMensagem.catch(erroEnviarMensagem);
     mensagemInput.mensagem = "";
-    document.querySelector("input").value = ""
+    document.querySelector(".caixa-input input").value = ""
 }
 
 
@@ -148,11 +152,13 @@ function erroEnviarMensagem(erro){
     window.location.reload();
 }
 
+
+//  -----------------------------Menu de usuarios-----------------------------  //
+
+
 function toggleMenu(){
     document.querySelector(".menu-lateral").classList.toggle("escondido");
 }
-
-
 
 function getUsuariosOnlineServidor(){
     const requisiçãoUsuariosOnline = axios.get('https://mock-api.driven.com.br/api/v4/uol/participants');
@@ -205,27 +211,25 @@ function mostrarUsuariosOnline(){
     }
     
     for(let i = 0; i < usuariosOnline.length; i++){
-        if(usuariosOnline[i].name !== usuario.name){
-            if(usuariosOnline[i].name === usuarioSelecionado){
-                listaUsuarios.innerHTML += `
-                <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
-                    <ion-icon name="person-circle"></ion-icon>
-                    <p>${usuariosOnline[i].name}</p>
-                    <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
-                </div>
-                `
-            }
-            else{
-                listaUsuarios.innerHTML += `
-                <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
-                    <ion-icon name="person-circle"></ion-icon>
-                    <p>${usuariosOnline[i].name}</p>
-                    <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
-                </div>
-                `
-            } 
-        }                  
-    }    
+        if(usuariosOnline[i].name === usuarioSelecionado){
+            listaUsuarios.innerHTML += `
+            <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>${usuariosOnline[i].name}</p>
+                <div class="icone-selecionado"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>
+            `
+        }
+        else{
+            listaUsuarios.innerHTML += `
+            <div class="opcao" onclick="selecionarOpcaoPessoa(this)" data-identifier="participant">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>${usuariosOnline[i].name}</p>
+                <div class="icone-selecionado escondido"><ion-icon name="checkmark-outline"></ion-icon></ion-icon></div>
+            </div>
+            `
+        } 
+    } 
 }
 
 function selecionarOpcaoPessoa(novaOpcaoSelecionada){
@@ -269,11 +273,16 @@ function mudarHTMLCaixaInput(){
     }
 }
 
+
+//  -----------------------------Enviar mensagem com enter-----------------------------  //
+
 function checarTecla(input){
-    input.addEventListener('keyup', function(e){
-        var key = e.keyCode;
-        if (key == 13) { 
-            enviarMensagem();
-        }
-      });   
+    if(input.parentNode.classList.contains("caixa-input")){
+        input.addEventListener('keyup', function(e){
+            var key = e.keyCode;
+            if (key == 13) { 
+                enviarMensagem();
+            }
+        });
+    }     
 }

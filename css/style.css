@@ -180,7 +180,55 @@ h6{
     --ionicon-stroke-width: 86px;
 }
 
+.tela-login{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tela-login img{
+    width: 130px;
+    height: 92px;
+    margin-top: 15vh;
+    margin-bottom: 18vh;
+}
+
+.tela-login input{
+    width: 261px;
+    height: 54px;
+    background: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.tela-login input::placeholder{
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 25px;
+    text-align: center;
+    color: #AEAEAE;
+}
+
+.tela-login button{
+    width: 109px;
+    height: 45px;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: center;
+    color: #696969;
+
+}
+
 .escondido{
     display: none;
 }
-
